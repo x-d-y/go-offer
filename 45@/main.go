@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println(minNumber([]int{3, 30, 34, 5, 9}))
+	fmt.Println(minNumber([]int{1}))
 }
 
 func minNumber(nums []int) string {
@@ -46,11 +46,9 @@ func qs(nums []string) []string {
 			flagi, flagj = false, false
 		}
 	}
-	l, r := []string{}, []string{}
-	l = qs(nums[:max(i, j)])
-	if max(i, j) <= len(nums)-2 {
-		r = qs(nums[max(i, j) : len(nums)-1])
-	}
+	l := qs(nums[:max(i, j)])
+	r := qs(nums[max(i, j) : len(nums)-1])
+
 	return append(append(l, nums[len(nums)-1]), r...)
 }
 
