@@ -6,58 +6,44 @@ import (
 )
 
 func main() {
-	root := buildTree([]string{"5", "3", "6", "2", "4", "null", "null", "1"})
-	fmt.Println(kthLargest(root, 4))
-
+	root := buildTree([]string{"1", "2", "2", "3", "3", "null", "null", "4", "4"})
+	fmt.Println(isBalanced(root))
 }
 
-var i int
-
-func kthLargest(root *TreeNode, k int) int {
-	i = 0
-	return r(root, k).Val
-}
-
-func r(root *TreeNode, k int) *TreeNode {
-	if root == nil {
-		return nil
-	}
-
-	if right := r(root.Right, k); right != nil {
-		return right
-	}
-
-	i++
-	if i == k {
-		return root
-	}
-
-	if left := r(root.Left, k); left != nil {
-		return left
-	}
-
-	return nil
-
-}
-
-/*
-var res []int
-
-func kthLargest(root *TreeNode, k int) int {
-	res = make([]int, 0)
+func isBalanced(root *TreeNode) bool {
+	is = true
 	r(root)
-	return res[len(res)-k]
+	return is
 }
 
-func r(root *TreeNode) {
-	if root == nil {
-		return
+var is bool
+
+func r(root *TreeNode) int {
+	if !is {
+		return 0
 	}
-	r(root.Left)
-	res = append(res, root.Val)
-	r(root.Right)
+	if root == nil {
+		return 0
+	}
+	deepl := r(root.Left)
+	deepr := r(root.Right)
+	s := deepl - deepr
+
+	if s <= 1 && s >= -1 {
+		return max(deepl, deepr) + 1
+	} else {
+		is = false
+		return 0
+	}
 }
-*/
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 func buildTree(nums []string) *TreeNode {
 	if len(nums) == 0 {
 		return nil
