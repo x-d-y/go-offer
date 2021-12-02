@@ -1,49 +1,54 @@
 package main
 
+import "fmt"
+
 func main() {
-
+	fmt.Println(maxSlidingWindow([]int{1,3,1,2,0,5}, 3))
 }
 
-type MaxQueue struct {
-	queue   []int
-	dequeue []int
-}
+var dequeue []int
+var queue []int
+var res []int
 
-func Constructor() MaxQueue {
-	m := MaxQueue{
-		queue:   make([]int, 0),
-		dequeue: make([]int, 0),
+func maxSlidingWindow(nums []int, k int) []int {
+	if k > len(nums) || k == 0 || len(nums) == 0 {
+		return []int{}
 	}
-	return m
-}
-
-func (this *MaxQueue) Max_value() int {
-	if len(this.dequeue) == 0 {
-		return -1
-	}
-	return this.dequeue[0]
-}
-
-func (this *MaxQueue) Push_back(value int) {
-	this.queue = append(this.queue, value)
-	for i, v := range this.dequeue {
-		if v < value {
-			this.dequeue = this.dequeue[:i]
-			this.dequeue = append(this.dequeue, value)
-			return
+	dequeue = make([]int, 0)
+	queue = make([]int, 0)
+	res = make([]int, 0)
+	for i := 0; i < k; i++ {
+		queue = append(queue, nums[i])
+		if len(dequeue) == 0 {
+			dequeue = append(dequeue, nums[i])
+		} else {
+			dequeue = insert(dequeue, nums[i])
 		}
 	}
-	this.dequeue = append(this.dequeue, value)
-}
 
-func (this *MaxQueue) Pop_front() int {
-	if len(this.queue) == 0 {
-		return -1
+	for i := k; i < len(nums); i++ {
+		res = append(res, dequeue[0])
+		pop := queue[0]
+		queue = queue[1:]
+		if pop == dequeue[0] {
+			dequeue = dequeue[1:]
+		}
+		queue = append(queue, nums[i])
+		if len(dequeue) == 0 {
+			dequeue = append(dequeue, nums[i])
+		} else {
+			dequeue = insert(dequeue, nums[i])
+		}
 	}
-	res := this.queue[0]
-	this.queue = this.queue[1:]
-	if res == this.dequeue[0] {
-		this.dequeue = this.dequeue[1:]
+	return append(res, dequeue[0])
+}
+func insert(dequeue []int, k int) []int {
+	for i, v := range dequeue {
+		if v < k {
+			dequeue = append(make([]int, 0), dequeue[:i]...)
+			break
+		}
 	}
-	return res
+	dequeue = append(dequeue, k)
+	return dequeue
 }
